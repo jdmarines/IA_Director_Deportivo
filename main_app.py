@@ -12,6 +12,30 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
+# ----- CÓDIGO DE DIAGNÓSTICO -----
+import os
+import google.generativeai as genai
+
+with st.expander("🔍 VERIFICACIÓN DE DIAGNÓSTICO DE API"):
+    st.write("Verificando la configuración de la API de Google...")
+    api_key_exists = "GOOGLE_API_KEY" in os.environ and os.environ["GOOGLE_API_KEY"]
+
+    if not api_key_exists:
+        st.error("ERROR: La variable de entorno GOOGLE_API_KEY no se encontró en los Secrets de Streamlit.")
+    else:
+        st.success("OK: La variable de entorno GOOGLE_API_KEY está cargada.")
+        try:
+            genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+            st.write("**Modelos disponibles para tu API Key:**")
+            model_list = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+            if not model_list:
+                st.warning("No se encontraron modelos compatibles con 'generateContent'.")
+            else:
+                st.dataframe(model_list)
+        except Exception as e:
+            st.error(f"ERROR al contactar la API de Google: {e}")
+# ----- FIN DEL CÓDIGO DE DIAGNÓSTICO -----
+
 # Cargar la variable de entorno con la API Key de Google
 load_dotenv()
 

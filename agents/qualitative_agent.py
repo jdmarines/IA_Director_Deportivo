@@ -144,10 +144,16 @@ class QualitativeAgent:
         print(f"Se encontraron {len(relevant_docs)} fragmentos relevantes (k={self.retriever_k}).")
 
         try:
-            # load_qa_chain con map_reduce acepta run(...) con estos kwargs:
-            response = self.chain.run(input_documents=relevant_docs, question=query)
-            return response.strip()
+            # Usamos .invoke() que es la sintaxis moderna de LangChain
+            # Espera un diccionario como entrada y devuelve un diccionario como salida
+            response_dict = self.chain.invoke(
+                {"input_documents": relevant_docs, "question": query},
+                return_only_outputs=True
+            )
+            # La respuesta está en la clave 'output_text'
+            return response_dict.get('output_text', 'No se pudo generar una respuesta.').strip()
         except Exception as e:
+            # ... (el resto del bloque except se mantiene igual)
             # Log amigable para diagnosticar problemas de cuota, safety, timeout o input grande
             return (
                 "Ocurrió un error consultando el LLM.\n"

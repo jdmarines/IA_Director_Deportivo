@@ -1,13 +1,10 @@
-# Archivos de entorno y secretos de Streamlit (¡MUY IMPORTANTE!)
-.streamlit/secrets.toml
+# Archivos de entorno
 .env
 
-# Archivos generados por Python
+# Directorios de caché de Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# Archivos de sistema operativo
-.DS_Store
-Thumbs.db
+# Archivos de entorno virtual
+venv/
+.venv/

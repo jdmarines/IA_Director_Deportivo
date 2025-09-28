@@ -75,7 +75,7 @@ def initialize_router_chain():
     print("Inicializando cadena de enrutamiento...")
     
     # Usamos Gemini Flash por su velocidad y bajo costo
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.0)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.0)
 
     # El prompt es la "inteligencia" del enrutador. Le enseñamos a clasificar la pregunta.
     router_template = """

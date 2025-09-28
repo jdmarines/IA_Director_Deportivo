@@ -25,7 +25,7 @@ class QualitativeAgent:
         gemini_model: str = "gemini-2.5-flash", 
         temperature: float = 0.2,
     ):
-        print("Inicializando Agente Cualitativo con FAISS...")
+        print("Inicializando Agente Cualitativo con Chroma...")
 
         # --- 1) Carga y split de documentos
         loader = DirectoryLoader(documents_path, glob="**/*.txt", show_progress=True)

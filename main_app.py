@@ -4,8 +4,8 @@ import streamlit as st
 from dotenv import load_dotenv
 
 # Importamos las clases de nuestros agentes
-from quantitative import QuantitativeAgent
-from qualitative import QualitativeAgent
+from agents.quantitative_agent import QuantitativeAgent
+from agents.qualitative_agent import QualitativeAgent
 
 # Importamos lo necesario de LangChain y Gemini
 from langchain_google_genai import ChatGoogleGenerativeAI

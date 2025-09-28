@@ -74,30 +74,55 @@ class QualitativeAgent:
                 "Falta GOOGLE_API_KEY. Exporta la variable o habilita el fallback de Ollama."
             )
 
-        # --- 4) Prompt en español, pensado para map_reduce
-        prompt_template = """
-Eres un analista experto en fútbol (Premier League).
-Responde SIEMPRE en español, con precisión y concisión.
-Usa SOLO la información del contexto. Si no es suficiente, dilo explícitamente.
+# --- 4) Definir los dos prompts necesarios para map_reduce
 
-Contexto:
-{context}
+        # Prompt para la fase "map": Se aplica a cada documento individualmente.
+        map_prompt_template = """
+        Eres un analista experto en fútbol (Premier League).
+        Usa SOLO la información del siguiente contexto para responder la pregunta.
+        Sé preciso y conciso.
 
-Pregunta:
-{question}
+        Contexto:
+        {context}
 
-Respuesta (en español):
-"""
-        PROMPT = PromptTemplate(
-            template=prompt_template,
+        Pregunta:
+        {question}
+
+        Respuesta (en español):
+        """
+        MAP_PROMPT = PromptTemplate(
+            template=map_prompt_template,
             input_variables=["context", "question"],
         )
 
-        # --- 5) QA chain en modo map_reduce (mejor para textos largos que stuff)
+        # Prompt para la fase "combine": Toma las respuestas de la fase "map" y las sintetiza.
+        combine_prompt_template = """
+        Eres un analista experto en fútbol (Premier League).
+        A continuación se te proporcionan varias respuestas extraídas de distintos informes sobre una pregunta.
+        Sintetiza estas respuestas en un párrafo final, coherente y bien redactado.
+        Si las respuestas son contradictorias, señálalo. NO inventes información.
+        Responde SIEMPRE en español.
+
+        Respuestas de los informes:
+        {summaries}
+
+        Pregunta Original:
+        {question}
+
+        Respuesta Final (en español):
+        """
+        COMBINE_PROMPT = PromptTemplate(
+            template=combine_prompt_template,
+            input_variables=["summaries", "question"],
+        )
+
+        # --- 5) QA chain en modo map_reduce con los prompts correctos
         self.chain = load_qa_chain(
             self.llm,
-            chain_type="map_reduce",  # <- clave para no reventar el contexto
-            prompt=PROMPT,            # se usa en la fase "map"; LangChain gestiona el reduce
+            chain_type="map_reduce",
+            # Aquí está el cambio clave: usamos los argumentos específicos
+            question_prompt=MAP_PROMPT,
+            combine_prompt=COMBINE_PROMPT,
             verbose=False,
         )
 

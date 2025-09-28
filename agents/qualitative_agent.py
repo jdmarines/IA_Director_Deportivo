@@ -22,7 +22,7 @@ class QualitativeAgent:
         chunk_overlap: int = 120,
         top_k: int = 6,  # recupera pocos chunks para no exceder el contexto
         model_name_embed: str = "sentence-transformers/all-MiniLM-L6-v2",
-        gemini_model: str = "gemini-1.5-flash",  # evita -latest
+        gemini_model: str = "gemini-pro", 
         temperature: float = 0.2,
     ):
         print("Inicializando Agente Cualitativo con FAISS...")

@@ -4,7 +4,7 @@ from typing import List
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 # Fallback opcional si no hay clave de Google (descomenta si lo usarás)
@@ -44,8 +44,8 @@ class QualitativeAgent:
         self.embeddings = HuggingFaceEmbeddings(model_name=model_name_embed)
         print("Modelo de embeddings cargado.")
 
-        self.vector_store = FAISS.from_documents(self.texts, self.embeddings)
-        print("Base de datos vectorial FAISS creada en memoria.")
+        self.vector_store = Chroma.from_documents(self.texts, self.embeddings)
+        print("Base de datos vectorial Chroma creada en memoria.")
 
         # --- 3) LLM (Gemini) + safety + timeout
         google_api_key = os.getenv("GOOGLE_API_KEY")

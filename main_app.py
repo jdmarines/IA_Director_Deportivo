@@ -12,11 +12,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
-# ----- CÓDIGO DE DIAGNÓSTICO -----
+# CÓDIGO DE DIAGNÓSTICO
 import os
 import google.generativeai as genai
 
-with st.expander("🔍 VERIFICACIÓN DE DIAGNÓSTICO DE API"):
+with st.expander("VERIFICACIÓN DE DIAGNÓSTICO DE API"):
     st.write("Verificando la configuración de la API de Google...")
     api_key_exists = "GOOGLE_API_KEY" in os.environ and os.environ["GOOGLE_API_KEY"]
 
@@ -34,12 +34,9 @@ with st.expander("🔍 VERIFICACIÓN DE DIAGNÓSTICO DE API"):
                 st.dataframe(model_list)
         except Exception as e:
             st.error(f"ERROR al contactar la API de Google: {e}")
-# ----- FIN DEL CÓDIGO DE DIAGNÓSTICO -----
 
-# Cargar la variable de entorno con la API Key de Google
 load_dotenv()
 
-# --- CONFIGURACIÓN DE LA APLICACIÓN DE STREAMLIT ---
 st.set_page_config(
     page_title="ScoutAI - Asistente de Scouting",
     page_icon="⚽",
@@ -49,16 +46,13 @@ st.set_page_config(
 st.title("⚽ ScoutAI: Tu Asistente de Scouting")
 st.caption("Una herramienta para análisis cuantitativo y cualitativo de jugadores.")
 
-# --- INICIALIZACIÓN DE LOS AGENTES (USANDO CACHÉ DE STREAMLIT) ---
-# st.cache_resource permite que los agentes se carguen una sola vez y no en cada recarga.
-# Esto es crucial para no reconstruir la base de datos vectorial cada vez.
+# INICIALIZACIÓN DE LOS AGENTES (USANDO STREAMLIT)
 @st.cache_resource
 def initialize_agents():
     """
     Carga y prepara ambos agentes para ser utilizados.
     """
     print("Inicializando agentes por primera vez...")
-    # Asegúrate de que la ruta al CSV es correcta
     quantitative_agent = QuantitativeAgent(csv_path="data/stats.csv") 
     qualitative_agent = QualitativeAgent()
     print("Agentes listos.")
@@ -66,7 +60,6 @@ def initialize_agents():
 
 quantitative_agent, qualitative_agent = initialize_agents()
 
-# --- LÓGICA DEL ENRUTADOR (ROUTER) CON GEMINI ---
 @st.cache_resource
 def initialize_router_chain():
     """
@@ -105,7 +98,7 @@ def initialize_router_chain():
 router_chain = initialize_router_chain()
 
 
-# --- INTERFAZ DE USUARIO ---
+# INTERFAZ DE USUARIO
 user_question = st.text_input(
     "Haz tu pregunta sobre un jugador:",
     placeholder="Ej: ¿Cuáles son las estadísticas de Haaland? o ¿Cómo es el estilo de juego de Bellingham?"
